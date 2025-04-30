@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - What2Eat</title>
+    <style>
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f6fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            margin-right: 20px;
+        }
+
+        .user-info h1 {
+            color: #2d3436;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: #636e72;
+        }
+
+
+        .section-title {
+            color: #2d3436;
+            border-left: 4px solid #e74c3c;
+            padding-left: 15px;
+            margin: 25px 0;
+        }
+
+
+        .comment-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .comment-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-restaurant {
+            min-width: 200px;
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .comment-content {
+            flex: 1;
+            color: #2d3436;
+        }
+
+        .comment-time {
+            color: #636e72;
+            font-size: 0.9em;
+        }
+
+
+        .subscription-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .subscription-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .subscription-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-name {
+            color: #2d3436;
+            margin-bottom: 5px;
+        }
+
+        .restaurant-location {
+            color: #636e72;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .comment-item {
+                flex-direction: column;
+            }
+            
+            .comment-restaurant {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="avatar">张</div>
+                <div class="user-info">
+                    <h1>张小葡 (pudding_zhang)</h1>
+                    <p>pudding@umac.mo</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- comment -->
+        <h2 class="section-title">My comment (3)</h2>
+        <div class="comment-list">
+            <div class="comment-item">
+                <div class="comment-restaurant">時光屋 KITCHENext</div>
+                <div class="comment-content">
+                    <p>牛肉丼饭非常正宗！酱汁调配得恰到好处，米饭也煮得粒粒分明</p>
+                    <div class="comment-time">2024-03-15 18:24</div>
+                </div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-restaurant">玫瑰园 Café Rose Garden</div>
+                <div class="comment-content">
+                    <p>拿铁咖啡的拉花很漂亮，不过蛋糕稍微有点偏甜</p>
+                    <div class="comment-time">2024-03-12 10:45</div>
+                </div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-restaurant">香榭里 Élysée Bakery</div>
+                <div class="comment-content">
+                    <p>可颂非常酥脆，建议早上十点前购买最新鲜</p>
+                    <div class="comment-time">2024-03-08 07:32</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- subscribe -->
+        <h2 class="section-title">My subscribed restaurants (4)</h2>
+        <div class="subscription-grid">
+            <div class="subscription-card">
+                <img src="resimage/xxl.jpg"  alt="Élysée Bakery" class="restaurant-image">
+                <h3 class="restaurant-name">香榭里 Élysée Bakery</h3>
+                <p class="restaurant-location">N1-G005</p>
+            </div>
+            <div class="subscription-card">
+                <img src="resimage/mgy.png" alt="Café Rose Garden" class="restaurant-image">
+                <h3 class="restaurant-name">玫瑰园 Café Rose Garden</h3>
+                <p class="restaurant-location">E2-G036</p>
+            </div>
+            <div class="subscription-card">
+                <img src="resimage/sgw.jpg" alt="NEXTKITCHEN" class="restaurant-image">
+                <h3 class="restaurant-name">時光屋 KITCHENext</h3>
+                <p class="restaurant-location">E5-G081</p>
+            </div>
+            <div class="subscription-card">
+                <img src="resimage/sbw.png" alt="SUBWAY" class="restaurant-image">
+                <h3 class="restaurant-name">賽百味 SUBWAY</h3>
+                <p class="restaurant-location">S8-G016</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

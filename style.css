@@ -83,7 +83,7 @@ p {
 }
 
 .header {
-    background: radial-gradient( #3e8bdb, #fff);
+    background: radial-gradient(#3e8bdb, #fff);
 }
 
 .header .row {
@@ -166,7 +166,7 @@ h4 {
 /* ------------ offer --------------- */
 
 .offer {
-    background: radial-gradient(#fff, #ffd6d6);
+    background: radial-gradient(#3e8bdb, #fff);
     margin-top: 80px;
     padding: 30px 0;
 }
@@ -489,7 +489,7 @@ th:last-child {
 /* ==================== account-page =================== */
 .account-page {
     padding: 50px 0;
-    background: radial-gradient(#fff, #ffd6d6);
+    background: radial-gradient(#3e8bdb, #fff);
 }
 .form-container {
     background: #fff;
@@ -566,19 +566,42 @@ form a {
     position: absolute;
     top: 60px;
     right: 20px;
-    width: 200px;
+    width: 250px;
     background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 15px;
     z-index: 1000;
-    border-radius: 5px;
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .notification-popup p {
-    margin: 0;
+    margin: 10px 0; /* 添加上下间距 */
     font-size: 14px;
-    color: #555;
+    color: #333;
+    line-height: 1.5;
+}
+
+.notification-popup::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent #fff transparent;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* -------------------------------- media query for less than 600px screen size ----------------------  */

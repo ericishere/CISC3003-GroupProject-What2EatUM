@@ -68,17 +68,7 @@
                     <h4>Working time﹕11:00-19:30</h4>
                     <h4>Location:Shop E5-G081~E5G091, Central Academic Building, The University of Macau, Taipa.</h4>   
                     <p>$25.00~70.00</p>
-                    <select>
-                        <option>Name : Price</option>
-                        <option>Sour and Spicy Noodles : ¥50.0</option>
-                        <option>Single Braised Beef Tendon : ¥60.0</option>
-                        <option>WingWing Chicken (4 pcs) : ¥25.0</option>
-                        <option>Braised Beef Tendon Rice : ¥55.0</option>
-                        <option>Coffee Time : ¥25.0</option>
-                    </select>
-                    <p class="quantities-label">Quantities:</p>
-                    <input type="number" value="0" id="quantity" min="0">
-                    <a href="javascript:void(0)" class="btn" onclick="addToCart()">Pay</a>
+                    <br>
                     <h3>Resterant Details <i class="fa fa-indent"></i></h3>
                     <br>
                     <p>Welcome to KITCHNest—where East meets West on your plate! 🍽️✨
@@ -88,7 +78,17 @@
             </div>
         </div>
 
-<!-- ============== title ============ -->
+        <!-- ====================== Reviews Section ===================== -->
+        <div class="small-container comments-section">
+            <div class="row">
+                <h2>Forum</h2>
+                <p>🍜 “KITCHENext’s signature fried rice feels like a dance party in every bite!”</p>
+                <p>🌟 “Their creamy pasta is so silky it melts into your soul—highly recommended!”</p>
+                <p>🔥 “Freshly roasted duck rice right out of the oven—crispy skin meets steamy rice!”</p>
+            </div>
+        </div>
+
+        <!-- ============== title ============ -->
         <div class="small-container">
             <div class="row row-2">
                 <h2>Related Resterents</h2>
@@ -101,8 +101,8 @@
     <div class="small-container">
         <div class="row">
             <div class="col-4">
-                <a href=""><img src="images/Classical_Resterants_1.png"></a>
-                <a href=""></a><h4>AZUCAR</h4></a>
+                <img src="images/Classical_Resterants_1.png">
+                <h4>AZUCAR</h4>
                 <div class="rating">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -246,12 +246,6 @@
     }
 </script>
 
-<script>
-    function addToCart() {
-        const quantity = document.getElementById("quantity").value;
-        alert(`You have added ${quantity} item(s) of foods to your cart.`);
-    }
-</script>
 </body> 
 </html>
 

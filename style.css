@@ -375,6 +375,7 @@ select:focus {
 }
 
 /* =============================== Single product details================= */
+
 .single-product {
     margin-top: 80px;
 }
@@ -429,10 +430,78 @@ input:focus {
     border-radius: 5px; /* 可选：添加圆角 */
 }
 
-/* Quantities label styling */
-.quantities-label {
-    padding-top: 20px;
+/* KITCHENext 评论区终极优化样式 */
+.comments-section {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 25px;
+    background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    backdrop-filter: blur(8px);
 }
+
+.comments-section .row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+
+.comments-section p {
+    font-size: 18px;
+    color: #222;
+    line-height: 1.9;
+    padding: 20px;
+    background: rgba(255, 236, 179, 0.95);
+    border-left: 8px solid #ff9800;
+    border-radius: 10px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 鼠标悬停时增强视觉交互 */
+.comments-section p:hover {
+    background: rgba(255, 204, 128, 1);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* 添加动画效果 */
+.comments-section p::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ff9800;
+    top: 50%;
+    left: -12px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-in-out;
+}
+
+/* 悬停时强化动画 */
+.comments-section p:hover::after {
+    left: -16px;
+    width: 12px;
+    height: 12px;
+}
+
+/* 标题优化 */
+.comments-section h2 {
+    font-size: 24px;
+    color: #ff9800;
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ff9800;
+}
+
+
+
 
 /* ==================== cart items ================ */
 .cart-page {

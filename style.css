@@ -421,6 +421,18 @@ input:focus {
     flex-basis: 24%;
     cursor: pointer;
 }
+.small-img-row .small-img-col img {
+    width: 100%; /* 保持宽度一致 */
+    height: 100px; /* 设置统一高度 */
+    object-fit: cover; /* 确保图片内容适应容器 */
+    border: 1px solid #ddd; /* 可选：添加边框以增强视觉一致性 */
+    border-radius: 5px; /* 可选：添加圆角 */
+}
+
+/* Quantities label styling */
+.quantities-label {
+    padding-top: 20px;
+}
 
 /* ==================== cart items ================ */
 .cart-page {

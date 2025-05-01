@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Products - RedStore</title>
+    <title>What2Eat@UM-single restaurant page</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -14,7 +14,7 @@
         <div class="container">
             <div class="navbar">
                 <div class="logo">
-                    <a href="index.html"><img src="images/logo.png" width="125px"></a>
+                    <a href="index.html"><img src="images/logo-removebg-preview.png" width="125px"></a>
                 </div>
                 <nav>
                     <ul id="MenuItems">
@@ -25,6 +25,16 @@
                         <li><a href="account.html">Account</a></li>
                     </ul>
                 </nav>
+                <a href="javascript:void(0)" onclick="toggleNotifications()">
+                    <img src="images/notifications.png" width="30px" height="30px">
+                </a>
+                <div id="notificationPopup" class="notification-popup">
+                    <p><strong>📢 Latest Update:</strong> AZUCAR has been rated 5 stars! 🌟 Don't miss out on their amazing dishes!</p>
+                    <hr>
+                    <p><strong>🔥 Special Offer:</strong> Enjoy 20% off at KITCHENext this week! 🥳 Limited time only!</p>
+                    <hr>
+                    <p><strong>🍴 Foodie Tip:</strong> Explore the newest restaurants and satisfy your cravings today! 🍕🍔</p>
+                </div>
                 <a href="cart.html"><img src="images/cart.png" width="30px" height="30px"></a>
                 <img src="images/menu.png" class="menu-icon" onclick="menutoggle()">
             </div>
@@ -34,41 +44,46 @@
         <div class="small-container single-product">
             <div class="row">
                 <div class="col-2">
-                    <img src="images/gallery-1.jpg" width="100%" id="productImg">
+                    <img src="images/KITCHNest-1.jpg" width="100%" id="productImg">
 
                     <div class="small-img-row">
                         <div class="small-img-col">
-                            <img src="images/gallery-1.jpg" width="100%" class="small-img">
+                            <img src="images/KITCHNest-1.jpg" width="100%" class="small-img">
                         </div>
                         <div class="small-img-col">
-                            <img src="images/gallery-2.jpg" width="100%" class="small-img">
+                            <img src="images/KITCHNest-2.jpg" width="100%" class="small-img">
                         </div>
                         <div class="small-img-col">
-                            <img src="images/gallery-3.jpg" width="100%" class="small-img">
+                            <img src="images/KITCHNest-3.jpg" width="100%" class="small-img">
                         </div>
                         <div class="small-img-col">
-                            <img src="images/gallery-4.jpg" width="100%" class="small-img">
+                            <img src="images/KITCHNest-4.jpg" width="100%" class="small-img">
                         </div>
                     </div>
 
                 </div>
                 <div class="col-2">
-                    <p>Home / T-Shirt</p>
-                    <h1>Red Printed T-Shirt by ITRIBE</h1>
-                    <h4>$60.00</h4>
+                    <p>Resterants / KITCHENext </p>
+                    <h1>KITCHENext</h1>
+                    <h4>Working time﹕11:00-19:30</h4>
+                    <h4>Location:Shop E5-G081~E5G091, Central Academic Building, The University of Macau, Taipa.</h4>   
+                    <p>$25.00~70.00</p>
                     <select>
-                        <option>Select Size</option>
-                        <option>XXL</option>
-                        <option>XL</option>
-                        <option>Large</option>
-                        <option>Medium</option>
-                        <option>Small</option>
+                        <option>Name : Price</option>
+                        <option>Sour and Spicy Noodles : ¥50.0</option>
+                        <option>Single Braised Beef Tendon : ¥60.0</option>
+                        <option>WingWing Chicken (4 pcs) : ¥25.0</option>
+                        <option>Braised Beef Tendon Rice : ¥55.0</option>
+                        <option>Coffee Time : ¥25.0</option>
                     </select>
-                    <input type="number" value="1">
-                    <a href="" class="btn">Add To Cart</a>
-                    <h3>Product Details <i class="fa fa-indent"></i></h3>
+                    <p class="quantities-label">Quantities:</p>
+                    <input type="number" value="0" id="quantity" min="0">
+                    <a href="javascript:void(0)" class="btn" onclick="addToCart()">Pay</a>
+                    <h3>Resterant Details <i class="fa fa-indent"></i></h3>
                     <br>
-                    <p>Give your summer warddrobe a style upgrade with the ITRIBE Men's Active T-shirt. Team it with a pair of shorts for your morning workout or a denims for an evening out with the guys.</p>
+                    <p>Welcome to KITCHNest—where East meets West on your plate! 🍽️✨
+                    From flavorful Chinese stir-fries and comforting dim sum 🥟🍜 to juicy steaks and creamy pastas 🥩🍝,
+                    we bring you the best of both worlds in every bite.</p>
                 </div>
             </div>
         </div>
@@ -76,7 +91,7 @@
 <!-- ============== title ============ -->
         <div class="small-container">
             <div class="row row-2">
-                <h2>Related Products</h2>
+                <h2>Related Resterents</h2>
                 <p>View more</p>
             </div>
         </div>
@@ -86,20 +101,8 @@
     <div class="small-container">
         <div class="row">
             <div class="col-4">
-                <img src="images/product-9.jpg">
-                <h4>Fancy Leather Wrist-Watch</h4>
-                <div class="rating">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star-half-o"></i>
-                </div>
-                <p>$40.00</p>
-            </div>
-            <div class="col-4">
-                <img src="images/product-10.jpg">
-                <h4>Heavy Carrier Shoes</h4>
+                <a href=""><img src="images/Classical_Resterants_1.png"></a>
+                <a href=""></a><h4>AZUCAR</h4></a>
                 <div class="rating">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -107,11 +110,11 @@
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
                 </div>
-                <p>$60.00</p>
+                <p>$45.00~66.00</p>
             </div>
             <div class="col-4">
-                <img src="images/product-11.jpg">
-                <h4>Black Running Joggers</h4>
+                <img src="images/Classical_Resterants_3.png">
+                <h4>Élysée Bakery</h4>
                 <div class="rating">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -119,11 +122,11 @@
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star-o"></i>
                 </div>
-                <p>$50.00</p>
+                <p>$70.00~100</p>
             </div>
             <div class="col-4">
-                <img src="images/product-12.jpg">
-                <h4>Joggers</h4>
+                <img src="images/Classical_Resterants_4.png" width="235px" height="235px">
+                <h4>Wan Hao Xuan</h4>
                 <div class="rating">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -131,7 +134,20 @@
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star-half-o"></i>
                 </div>
-                <p>$45.00</p>
+                <p>$80.00~120.00</p>
+            </div>
+            <div class="col-4">
+                <img src="images/Popular_Resterants_1.png" width="235px" height="235px">
+                <h4>McDonald</h4>
+                <div class="rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+                <p>$40.00~60.00</p>
+            </div>
             </div>
         </div>
     </div>
@@ -140,16 +156,9 @@
 
     <div class="footer">
         <div class="container">
-            <div class="row">
-                <div class="footer-col-1">
-                    <h3>Download Our App</h3>
-                    <p>Download App for Android and ios mobile phone.</p>
-                    <img src="images/play-store.png">
-                    <img src="images/app-store.png">
-                </div>
                 <div class="footer-col-2">
-                    <img src="images/logo-white.png">
-                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+                    <img src="images/logo-removebg-preview.png">
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Foods Accessible to the Many.</p>
                 </div>
                 <div class="footer-col-3">
                     <h3>Useful Links</h3>
@@ -206,6 +215,45 @@
       };
     }
   </script>
+
+
+<!-- ---------------------------- Javascript for menuToggle --------------------------- -->
+
+<script>
+    
+
+    var MenuItems = document.getElementById("MenuItems");
+
+    MenuItems.style.maxHeight = "0px";
+
+    function menutoggle(){
+
+    if(MenuItems.style.maxHeight == "0px") {
+        MenuItems.style.maxHeight = "300px";
+    } 
+    else
+    {
+        MenuItems.style.maxHeight = "0px";
+    }
+}
+</script>
+
+
+<script>
+    function toggleNotifications() {
+        var popup = document.getElementById("notificationPopup");
+        popup.style.display = popup.style.display === "block" ? "none" : "block";
+    }
+</script>
+
+<script>
+    function addToCart() {
+        const quantity = document.getElementById("quantity").value;
+        alert(`You have added ${quantity} item(s) of foods to your cart.`);
+    }
+</script>
+</body> 
+</html>
 
 </body> 
 </html>

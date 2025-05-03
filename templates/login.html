@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Login - What2Eat @ UM{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: radial-gradient(#3e8bdb, #fff);
+    }
+</style>
+<div class="account-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <img src="{{ url_for('static', filename='images/image_2.png') }}" width="100%">
+            </div>
+            <div class="col-2">
+                <div class="form-container">
+                    <h2>Login</h2>
+                    <form method="post" action="{{ url_for('login') }}">
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <button type="submit" class="btn">Login</button>
+                        <a href="{{ url_for('request_password_reset') }}">Forgot password?</a>
+                    </form>
+                    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

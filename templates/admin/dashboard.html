@@ -1,0 +1,121 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - What2Eat @ UM Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Dashboard</h1>
+    <div>
+        <span class="text-muted">Today: {{ utc_to_local(datetime.utcnow()).strftime('%B %d, %Y') }}</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="stat-value">{{ restaurant_count }}</div>
+                <div class="stat-label">Restaurants</div>
+                <a href="{{ url_for('admin_restaurants') }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-value">{{ user_count }}</div>
+                <div class="stat-label">Users</div>
+                <a href="{{ url_for('admin_users') }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="bi bi-star"></i>
+                </div>
+                <div class="stat-value">{{ review_count }}</div>
+                <div class="stat-label">Reviews</div>
+                <a href="{{ url_for('admin_reviews') }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-value">{{ pending_claims_count }}</div>
+                <div class="stat-label">Pending Claims</div>
+                <a href="{{ url_for('admin_restaurant_claims') }}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('admin_add_restaurant') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle me-2"></i> Add New Restaurant
+                    </a>
+                    <a href="{{ url_for('admin_restaurants') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-pencil-square me-2"></i> Manage Restaurants
+                    </a>
+                    <a href="{{ url_for('admin_restaurant_claims') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-check2-square me-2"></i> Review Restaurant Claims
+                    </a>
+                    <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-person-gear me-2"></i> Manage Users
+                    </a>
+                    <a href="{{ url_for('admin_reviews') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-star me-2"></i> Moderate Reviews
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th scope="row">App Version</th>
+                            <td>1.0.0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Database</th>
+                            <td>MySQL</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Server Time</th>
+                            <td>{{ utc_to_local(datetime.utcnow()).strftime('%H:%M:%S') }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Last Login</th>
+                            <td>{{ utc_to_local(current_user.last_login).strftime('%Y-%m-%d %H:%M:%S') if current_user.last_login else 'N/A' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

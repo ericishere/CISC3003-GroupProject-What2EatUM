@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} - What2Eat @ UM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleUI.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Additional CSS for restaurant detail page */
+        .restaurant-info {
+            margin-bottom: 20px;
+        }
+        
+        .restaurant-badges span {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        .badge-primary {
+            background-color: #3e8bdb;
+        }
+        
+        .badge-success {
+            background-color: #4CAF50;
+        }
+        
+        .badge-danger {
+            background-color: #ff523b;
+        }
+        
+        .badge-secondary {
+            background-color: #777;
+        }
+        
+        .business-hours {
+            margin: 20px 0;
+        }
+        
+        .business-hours table {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .business-hours th, .business-hours td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .restaurant-photos {
+            margin-bottom: 30px;
+        }
+        
+        .photo-gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        
+        .photo-gallery img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .main-photo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .review-section {
+            margin: 40px auto;
+        }
+        
+        .add-review-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .add-review-form h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .add-review-form select, 
+        .add-review-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .review-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .review-user {
+            font-weight: bold;
+        }
+        
+        .review-date {
+            color: #777;
+            font-size: 12px;
+        }
+        
+        .review-rating {
+            margin-bottom: 10px;
+        }
+        
+        .review-content {
+            margin-bottom: 15px;
+        }
+        
+        .review-photos {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+        
+        .review-photos img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .review-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .review-actions button {
+            padding: 5px 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .review-actions button.edit-btn {
+            color: #3e8bdb;
+            border-color: #3e8bdb;
+        }
+        
+        .review-actions button.delete-btn {
+            color: #ff523b;
+            border-color: #ff523b;
+        }
+        
+        .review-edit-form {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .reply-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .reply-card {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            border-left: 3px solid #3e8bdb;
+        }
+        
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .reply-user {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .reply-date {
+            color: #777;
+            font-size: 12px;
+        }
+        
+        .reply-content {
+            font-size: 14px;
+        }
+        
+        .reply-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .reply-actions button {
+            padding: 3px 8px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .reply-form {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .reply-form textarea {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .reply-form button {
+            padding: 0 15px;
+            background: #3e8bdb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .average-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .average-rating h3 {
+            margin-right: 10px;
+            color: #555;
+        }
+        
+        .average-rating .stars {
+            color: #ff523b;
+        }
+        
+        .login-prompt {
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .login-prompt a {
+            color: #ff523b;
+            font-weight: bold;
+        }
+        
+        .promo-badge {
+            background: #ff523b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        
+        /* Flash messages styling */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+        .flash-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .flash-danger {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .flash-warning {
+            background-color: #fff8e1;
+            color: #ff8f00;
+            border: 1px solid #ffe082;
+        }
+        
+        .flash-info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+        }
+        
+        /* Promotions styling */
+        .promo-item {
+            background: #fff8e1; 
+            border: 1px solid #ffe082; 
+            border-radius: 8px; 
+            padding: 20px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .promo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .promo-badge-special {
+            background: #ff523b; 
+            color: white; 
+            padding: 5px 10px; 
+            border-radius: 50px; 
+            font-size: 12px; 
+            margin-right: 10px;
+            display: inline-block;
+        }
+        
+        .promotions-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px;
+        }
+        
+        .promotions-section {
+            margin: 30px auto; 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 10px; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .promotions-title {
+            color: #ff523b; 
+            margin-bottom: 20px;
+        }
+        
+        .promo-image {
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .promo-item:hover .promo-image {
+            transform: scale(1.03);
+        }
+        
+        .promo-no-image {
+            height: 120px;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+        
+        /* Alternating promotion colors for variety */
+        .promo-item:nth-child(3n+1) {
+            background: #fff8e1;
+            border-color: #ffe082;
+        }
+        
+        .promo-item:nth-child(3n+2) {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+        
+        .promo-item:nth-child(3n+3) {
+            background: #e8f5e9;
+            border-color: #a5d6a7;
+        }
+
+        /* Image Modal/Lightbox Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+        
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 900px;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: #bbb;
+        }
+        
+        /* Add this class to images that should be enlargeable */
+        .enlargeable {
+            cursor: zoom-in;
+            transition: opacity 0.3s;
+        }
+        
+        .enlargeable:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('user_profile') }}">My Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if current_user.role == UserRole.ADMIN %}
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                    {% endif %}
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <a href="javascript:void(0)" onclick="toggleNotifications()">
+                <img src="{{ url_for('static', filename='images/notifications.png') }}" width="30px" height="30px">
+            </a>
+            <div id="notificationPopup" class="notification-popup">
+                <p><strong>New Review:</strong> AZUCAR has received a 5-star review! 🌟</p>
+                <hr>
+                <p><strong>Promotion:</strong> Get 20% off at KITCHENext this week! 🥳</p>
+                <hr>
+                <p><strong>Reminder:</strong> Don't forget to check out the latest restaurants! 🍴</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Restaurant Detail Section -->
+    <div class="small-container single-product">
+        <div class="row">
+            <div class="col-2">
+                {% if restaurant.photos|length > 0 %}
+                    <img src="{{ url_for('static', filename='uploads/' + restaurant.photos[0].file_path) }}" width="100%" id="productImg" class="main-photo">
+                    
+                    {% if restaurant.photos|length > 1 %}
+                        <div class="small-img-row">
+                            {% for photo in restaurant.photos %}
+                                {% if photo.is_approved %}
+                                    <div class="small-img-col">
+                                        <img src="{{ url_for('static', filename='uploads/' + photo.file_path) }}" class="small-img">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/default-restaurant.jpg') }}" width="100%" id="productImg" class="main-photo">
+                {% endif %}
+            </div>
+            
+            <div class="col-2">
+                <div class="restaurant-info">
+                    <h1>{{ restaurant.name }}
+                        {% if has_active_promotion %}
+                            <span class="promo-badge">Promotion</span>
+                        {% endif %}
+                    </h1>
+                    
+                    <p>{{ restaurant.location }}</p>
+                    
+                    <div class="restaurant-badges">
+                        <span class="badge-primary">{{ restaurant.cuisine_type.value }}</span>
+                        {% if restaurant.is_verified %}
+                            <span class="badge-success">Verified</span>
+                        {% else %}
+                            <span class="badge-secondary">Unverified</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if not restaurant.is_verified and current_user.is_authenticated and current_user.role != UserRole.ADMIN %}
+                    <div style="margin-top: 20px;">
+                        <a href="{{ url_for('claim_restaurant', restaurant_id=restaurant.restaurant_id) }}" class="btn">Claim This Restaurant</a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if restaurant.is_verified and current_user.is_authenticated and (current_user.user_id == restaurant.manager_id or current_user.role == UserRole.ADMIN) %}
+                    <div style="margin-top: 20px;">
+                        <a href="{{ url_for('manage_restaurant', restaurant_id=restaurant.restaurant_id) }}" class="btn">Manage Restaurant</a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Manage Promotions Button for Owner/Admin -->
+                    {% if restaurant.is_verified and current_user.is_authenticated and (current_user.user_id == restaurant.manager_id or current_user.role == UserRole.ADMIN) %}
+                    <div style="margin-top: 10px;">
+                        <a href="{{ url_for('manage_promotions', restaurant_id=restaurant.restaurant_id) }}" class="btn btn-secondary" style="background-color: #4CAF50;">Manage Promotions</a>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="business-hours">
+                        <h3>Business Hours</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Hours</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+                                {% for hour in restaurant.business_hours %}
+                                    <tr>
+                                        <td>{{ days[hour.day_of_week] }}</td>
+                                        <td>{{ hour.open_time.strftime('%I:%M %p') }} - {{ hour.close_time.strftime('%I:%M %p') }}</td>
+                                        <td>
+                                    {% if now.weekday() == hour.day_of_week and hour.open_time <= now.time() <= hour.close_time %}
+                                        <span class="badge-success">Open</span>
+                                    {% else %}
+                                        <span class="badge-secondary">Closed</span>
+                                    {% endif %}
+                                </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="address">
+                        <h3>Address</h3>
+                        <p>{{ restaurant.address }}</p>
+                    </div>
+                    
+                    {% if restaurant.description %}
+                        <div class="description">
+                            <h3>Description</h3>
+                            <p>{{ restaurant.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotions Section -->
+    <div class="small-container">
+        <div class="promotions-section">
+            <h2 class="promotions-title">Special Promotions</h2>
+            {% if active_promotions %}
+            <div class="promotions-grid">
+                {% for promo in active_promotions %}
+                    <div class="promo-item">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                            <span class="promo-badge-special">Limited Time</span>
+                            <h3 style="margin: 0; color: #333;">{{ promo.title }}</h3>
+                        </div>
+                        <p style="color: #555; font-size: 14px; margin-bottom: 10px;">
+                            <strong>Valid until:</strong> 
+                            {% set end_date = utc_to_local(promo.end_date) %}
+                            {{ end_date.strftime('%B %d, %Y') }}
+                            {% if now.date() == end_date.date() %}
+                                <span style="color: #ff523b; font-weight: bold;">(Today!)</span>
+                            {% endif %}
+                        </p>
+                        <p style="color: #555; margin-bottom: 15px;">{{ promo.description }}</p>
+                        {% if promo.image_path %}
+                            <div style="overflow: hidden; border-radius: 5px;">
+                                <img src="{{ url_for('static', filename='uploads/' + promo.image_path) }}" alt="Promotion Image" class="promo-image">
+                            </div>
+                        {% else %}
+                            <div class="promo-no-image">
+                                <i class="fa fa-bullhorn" aria-hidden="true" style="margin-right: 10px;"></i> Special Offer
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 30px; background: #f9f9f9; border-radius: 5px; margin: 20px 0;">
+                <i class="fa fa-info-circle" style="font-size: 32px; color: #aaa; margin-bottom: 15px;"></i>
+                <p style="color: #666; font-size: 16px;">No active promotions at the moment.</p>
+                {% if restaurant.is_verified and current_user.is_authenticated and (current_user.user_id == restaurant.manager_id or current_user.role == UserRole.ADMIN) %}
+                <p style="margin-top: 15px;">
+                    <a href="{{ url_for('manage_promotions', restaurant_id=restaurant.restaurant_id) }}" class="btn" style="padding: 8px 20px; font-size: 14px;">Add Promotions</a>
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="small-container review-section">
+        <h2>Reviews</h2>
+        
+        {% if reviews %}
+            <div class="average-rating">
+                {% set avg_rating = reviews|map(attribute='rating')|sum / reviews|length %}
+                <h3>{{ '%.1f'|format(avg_rating) }}/5</h3>
+                <div class="stars">
+                    {% for i in range(5) %}
+                        {% if i < avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star"></i>
+                        {% elif i < avg_rating|round(0, 'ceil') and i >= avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star-half-o"></i>
+                        {% else %}
+                            <i class="fa fa-star-o"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <span>({{ reviews|length }} reviews)</span>
+            </div>
+        {% endif %}
+        
+        <!-- Add Review Form -->
+        {% if current_user.is_authenticated %}
+            <div class="add-review-form">
+                <h3>Add Your Review</h3>
+                <form action="{{ url_for('add_review', restaurant_id=restaurant.restaurant_id) }}" method="post" enctype="multipart/form-data">
+                    <select name="rating" required>
+                        <option value="">Select Rating</option>
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="3">3 - Good</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="1">1 - Poor</option>
+                    </select>
+                    
+                    <textarea name="comment" placeholder="Write your review here..." rows="4" required></textarea>
+                    
+                    <div class="form-group">
+                        <label for="photos">Add Photos (optional):</label>
+                        <input type="file" name="photos" id="photos" multiple accept="image/*">
+                        <p style="font-size: 12px; color: #777;">You can upload up to 3 photos (max 5MB each)</p>
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Review</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="login-prompt">
+                <p>Please <a href="{{ url_for('login') }}">login</a> to add a review</p>
+            </div>
+        {% endif %}
+        
+        <!-- Reviews List -->
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="review-card" id="review-{{ review.review_id }}">
+                    <div class="review-header">
+                        <div>
+                            <span class="review-user">{{ review.user.username }}</span>
+                            <span class="review-date">{{ review.created_at.strftime('%B %d, %Y') }}</span>
+                            {% if review.updated_at and review.updated_at != review.created_at %}
+                                <span class="review-date">(edited)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="review-rating">
+                        {% for i in range(5) %}
+                            {% if i < review.rating %}
+                                <i class="fa fa-star" style="color: #ff523b;"></i>
+                            {% else %}
+                                <i class="fa fa-star-o" style="color: #ff523b;"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="review-content">
+                        {{ review.comment }}
+                    </div>
+                    
+                    {% if review.photos %}
+                        <div class="review-photos">
+                            {% for photo in review.photos %}
+                                <img src="{{ url_for('static', filename='uploads/' + photo.file_path) }}" alt="Review photo">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if current_user.is_authenticated and (current_user.user_id == review.user_id or current_user.role == UserRole.ADMIN) %}
+                        <div class="review-actions">
+                            {% if current_user.user_id == review.user_id %}
+                                <button class="edit-btn" onclick="toggleEditForm('{{ review.review_id }}')">Edit</button>
+                                <form action="{{ url_for('delete_review', review_id=review.review_id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            {% elif current_user.role == UserRole.ADMIN %}
+                                <form action="{{ url_for('admin_delete_review', review_id=review.review_id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                    <button type="submit" class="delete-btn">Admin Delete</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if current_user.is_authenticated and current_user.user_id == review.user_id %}
+                        <div class="review-edit-form" id="edit-form-{{ review.review_id }}">
+                            <form action="{{ url_for('edit_review', review_id=review.review_id) }}" method="post">
+                                <select name="rating" required>
+                                    <option value="">Select Rating</option>
+                                    <option value="5" {% if review.rating == 5 %}selected{% endif %}>5 - Excellent</option>
+                                    <option value="4" {% if review.rating == 4 %}selected{% endif %}>4 - Very Good</option>
+                                    <option value="3" {% if review.rating == 3 %}selected{% endif %}>3 - Good</option>
+                                    <option value="2" {% if review.rating == 2 %}selected{% endif %}>2 - Fair</option>
+                                    <option value="1" {% if review.rating == 1 %}selected{% endif %}>1 - Poor</option>
+                                </select>
+                                
+                                <textarea name="comment" rows="4" required>{{ review.comment }}</textarea>
+                                
+                                <button type="submit" class="btn">Update Review</button>
+                                <button type="button" class="btn" style="background-color: #999;" onclick="toggleEditForm('{{ review.review_id }}')">Cancel</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Replies Section -->
+                    {% if review.replies %}
+                        <div class="reply-section">
+                            <h4>Replies</h4>
+                            
+                            {% for reply in review.replies %}
+                                <div class="reply-card">
+                                    <div class="reply-header">
+                                        <span class="reply-user">{{ reply.user.username }}</span>
+                                        <span class="reply-date">{{ reply.created_at.strftime('%B %d, %Y') }}</span>
+                                    </div>
+                                    
+                                    <div class="reply-content">
+                                        {{ reply.content }}
+                                    </div>
+                                    
+                                    {% if current_user.is_authenticated and (current_user.user_id == reply.user_id or current_user.role == UserRole.ADMIN) %}
+                                        <div class="reply-actions">
+                                            {% if current_user.user_id == reply.user_id %}
+                                                <form action="{{ url_for('delete_reply', reply_id=reply.reply_id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this reply?');">
+                                                    <button type="submit" class="delete-btn">Delete</button>
+                                                </form>
+                                            {% elif current_user.role == UserRole.ADMIN %}
+                                                <form action="{{ url_for('admin_delete_reply', reply_id=reply.reply_id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this reply?');">
+                                                    <button type="submit" class="delete-btn">Admin Delete</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Add Reply Form -->
+                    {% if current_user.is_authenticated %}
+                        <div class="reply-section">
+                            <form action="{{ url_for('add_reply', review_id=review.review_id) }}" method="post" class="reply-form">
+                                <textarea name="content" placeholder="Write a reply..." required></textarea>
+                                <button type="submit">Reply</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet. Be the first to share your experience!</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-col-1">
+                <h3>What2Eat@UM</h3>
+                <p>Find the best dining options at the University of Macau</p>
+                <p>Discover restaurants, read reviews, and find the latest promotions all in one place.</p>
+                <img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}">
+            </div>
+            <div class="footer-col-2">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    <li><a href="{{ url_for('login') }}">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-3">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                    <li>Instagram</li>
+                    <li>YouTube</li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>About Us</h3>
+                <ul>
+                    <li>Our Story</li>
+                    <li>Contact Us</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">© 2025 What2Eat @ UM. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Toggle menu for mobile view
+        var MenuItems = document.getElementById("MenuItems");
+        MenuItems.style.maxHeight = "0px";
+
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+
+        // Notification toggle
+        function toggleNotifications() {
+            const popup = document.getElementById('notificationPopup');
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Product image gallery
+        let productImg = document.getElementById("productImg");
+        let smallImg = document.getElementsByClassName("small-img");
+  
+        for (let i = 0; i < smallImg.length; i++) {
+            smallImg[i].onclick = function() {
+                productImg.src = smallImg[i].src;
+            };
+        }
+
+        // Toggle edit form for reviews
+        function toggleEditForm(reviewId) {
+            const editForm = document.getElementById('edit-form-' + reviewId);
+            if (editForm.style.display === 'block') {
+                editForm.style.display = 'none';
+            } else {
+                editForm.style.display = 'block';
+            }
+        }
+    </script>
+
+    <!-- Image Modal/Lightbox -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Image modal functionality
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.getElementsByClassName('close-modal')[0];
+        
+        // Apply enlargeable class to all relevant images
+        function setupEnlargeableImages() {
+            // Main restaurant image
+            if (document.getElementById('productImg')) {
+                const mainImg = document.getElementById('productImg');
+                mainImg.classList.add('enlargeable');
+                mainImg.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                };
+            }
+            
+            // Small gallery images
+            const smallImgs = document.getElementsByClassName('small-img');
+            for (let i = 0; i < smallImgs.length; i++) {
+                smallImgs[i].classList.add('enlargeable');
+                smallImgs[i].onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    // Update main image too
+                    if (document.getElementById('productImg')) {
+                        document.getElementById('productImg').src = this.src;
+                    }
+                };
+            }
+            
+            // Review photos
+            const reviewPhotos = document.querySelectorAll('.review-photos img');
+            reviewPhotos.forEach(img => {
+                img.classList.add('enlargeable');
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                };
+            });
+            
+            // Promotion images
+            const promoImages = document.querySelectorAll('.promo-image');
+            promoImages.forEach(img => {
+                img.classList.add('enlargeable');
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                };
+            });
+        }
+        
+        // Close modal when clicking the × symbol
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+        
+        // Close modal when clicking outside the image
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+        
+        // Initialize enlargeable images when DOM is loaded
+        document.addEventListener('DOMContentLoaded', setupEnlargeableImages);
+    </script>
+</body>
+</html> 

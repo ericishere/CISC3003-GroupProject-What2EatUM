@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Restaurants - What2Eat @ UM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleUI.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('user_profile') }}">My Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if current_user.role == UserRole.ADMIN %}
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                    {% endif %}
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <a href="javascript:void(0)" onclick="toggleNotifications()">
+                <img src="{{ url_for('static', filename='images/notifications.png') }}" width="30px" height="30px">
+            </a>
+            <div id="notificationPopup" class="notification-popup">
+                <p><strong>New Review:</strong> AZUCAR has received a 5-star review! 🌟</p>
+                <hr>
+                <p><strong>Promotion:</strong> Get 20% off at KITCHENext this week! 🥳</p>
+                <hr>
+                <p><strong>Reminder:</strong> Don't forget to check out the latest restaurants! 🍴</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <!-- Search and filters -->
+    <div class="small-container">
+        <div class="row row-2">
+            <h2>All Restaurants at University of Macau</h2>
+            <form action="{{ url_for('restaurant_list') }}" method="get" class="search-form">
+                <div class="search-bar">
+                    <input type="text" name="q" placeholder="Search restaurants..." value="{{ search_query|default('') }}">
+                    <button type="submit" class="btn">Search</button>
+                </div>
+                
+                <div class="filters">
+                    <select name="cuisine" onchange="this.form.submit()">
+                        <option value="all" {% if cuisine_type == 'all' or not cuisine_type %}selected{% endif %}>All Cuisines</option>
+                        {% for cuisine in cuisine_types %}
+                        <option value="{{ cuisine.name|lower }}" {% if cuisine_type == cuisine.name|lower %}selected{% endif %}>
+                            {{ cuisine.value }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <select name="sort" onchange="this.form.submit()">
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Sort by Name</option>
+                        <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Sort by Rating</option>
+                        <option value="promo" {% if sort_by == 'promo' %}selected{% endif %}>Sort by Promotions</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Restaurant cards -->
+        <div class="row">
+            {% if restaurants %}
+                {% for restaurant in restaurants %}
+                <div class="col-4">
+                    <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.restaurant_id) }}">
+                        {% if restaurant.photos|length > 0 %}
+                        <img src="{{ url_for('static', filename='uploads/' + restaurant.photos[0].file_path) }}" alt="{{ restaurant.name }}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/default-restaurant.png') }}" alt="{{ restaurant.name }}">
+                        {% endif %}
+                        <h4>{{ restaurant.name }}</h4>
+                    </a>
+                    <div class="rating">
+                        {% if restaurant.reviews|length > 0 %}
+                        {% set avg_rating = restaurant.reviews|map(attribute='rating')|sum / restaurant.reviews|length %}
+                        {% for i in range(5) %}
+                            {% if i < avg_rating|round(0, 'floor') %}
+                                <i class="fa fa-star"></i>
+                            {% elif i < avg_rating|round(0, 'ceil') and i >= avg_rating|round(0, 'floor') %}
+                                <i class="fa fa-star-half-o"></i>
+                            {% else %}
+                                <i class="fa fa-star-o"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span>({{ restaurant.reviews|length }})</span>
+                        {% else %}
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa-star-o"></i>
+                        <i class="fa fa-star-o"></i>
+                        <span>(0)</span>
+                        {% endif %}
+                    </div>
+                    <p><strong>Location:</strong> {{ restaurant.location }}</p>
+                    <p><strong>Cuisine:</strong> {{ restaurant.cuisine_type.value }}</p>
+                    {% if restaurant.has_active_promotion %}
+                    <div class="promo-badge">Promotion</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <p>No restaurants found matching your criteria. Try different search terms or filters.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if pagination and pagination.total_pages > 1 %}
+        <div class="page-btn">
+            {% if pagination.has_prev %}
+            <a href="{{ url_for('restaurant_list', page=pagination.page-1, q=search_query, cuisine=cuisine_type, sort=sort_by) }}">
+                <span>&larr;</span>
+            </a>
+            {% endif %}
+            
+            {% for p in range(1, pagination.total_pages + 1) %}
+                {% if p == pagination.page %}
+                <span class="active">{{ p }}</span>
+                {% else %}
+                <a href="{{ url_for('restaurant_list', page=p, q=search_query, cuisine=cuisine_type, sort=sort_by) }}">
+                    <span>{{ p }}</span>
+                </a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if pagination.has_next %}
+            <a href="{{ url_for('restaurant_list', page=pagination.page+1, q=search_query, cuisine=cuisine_type, sort=sort_by) }}">
+                <span>&rarr;</span>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-col-1">
+                <h3>What2Eat@UM</h3>
+                <p>Find the best dining options at the University of Macau</p>
+                <p>Discover restaurants, read reviews, and find the latest promotions all in one place.</p>
+                <img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}">
+            </div>
+            <div class="footer-col-2">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    <li><a href="{{ url_for('login') }}">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-3">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                    <li>Instagram</li>
+                    <li>YouTube</li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>About Us</h3>
+                <ul>
+                    <li>Our Story</li>
+                    <li>Contact Us</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">© 2025 What2Eat @ UM. All rights reserved.</p>
+    </div>
+
+    <!-- JS for toggle menu and notifications -->
+    <script>
+        var MenuItems = document.getElementById("MenuItems");
+        MenuItems.style.maxHeight = "0px";
+
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+
+        function toggleNotifications() {
+            const popup = document.getElementById('notificationPopup');
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body> 
+</html>

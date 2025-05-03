@@ -90,3 +90,82 @@ Results can be sorted by:
   - Update business hours
   - Upload photos
   - Update basic information
+
+# Implementation Details
+
+## Database Structure
+The database structure is defined in `models.py` and includes the following main entities:
+- Users: Stores user accounts with roles and authentication info
+- Restaurants: Core entity for dining locations
+- Reviews: User feedback on restaurants
+- Promotions: Time-limited special offers
+- Restaurant Claims: Ownership verification requests
+- Notifications: In-app messages to users
+
+## Authentication System
+The authentication system includes:
+- User registration with email verification
+- Secure login with password hashing
+- Password reset via email
+- Role-based access control
+
+## Email Verification Process
+New users must verify their email before accessing their account:
+1. User registers and provides email
+2. System sends verification code to email
+3. User enters code to verify account
+4. Upon verification, user gains access to account features
+
+# Setup and Installation
+
+## Prerequisites
+- Python 3.10+
+- MySQL Server
+- SMTP account for sending emails
+
+## Installation Steps
+
+1. Clone the repository:
+```
+git clone https://github.com/your-repo/what2eat-um.git
+cd what2eat-um
+```
+
+2. Create and activate a virtual environment:
+```
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+```
+
+3. Install dependencies:
+```
+pip install -r requirements.txt
+```
+
+4. Create a MySQL database named `what2eat_um`
+
+5. Create a `.env` file with the following variables:
+```
+SECRET_KEY=your_secret_key
+DATABASE_URL=mysql+pymysql://username:password@localhost:3306/what2eat_um
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_DEFAULT_SENDER=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+```
+
+6. Initialize the database:
+```
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+```
+
+7. Run the application:
+```
+python app.py
+```

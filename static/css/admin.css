@@ -1,0 +1,161 @@
+/* Admin Dashboard Styles */
+body {
+    overflow-x: hidden;
+}
+
+.wrapper {
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.sidebar.toggled {
+    margin-left: -250px;
+}
+
+.sidebar .list-group-item {
+    border-radius: 0;
+    border: none;
+    padding: 15px 20px;
+}
+
+.sidebar .list-group-item:hover,
+.sidebar .list-group-item.active {
+    background-color: #343a40 !important;
+    color: #fff;
+    border-left: 4px solid #007bff;
+}
+
+/* Content Area */
+#page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+/* Cards and Stats */
+.stat-card {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .card-body {
+    position: relative;
+    padding: 1.5rem;
+}
+
+.stat-card .stat-icon {
+    position: absolute;
+    right: 1.5rem;
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stat-card .stat-label {
+    font-size: 1rem;
+}
+
+/* Tables */
+.table-admin th {
+    background-color: #f8f9fa;
+    border-top: none;
+}
+
+.action-column {
+    width: 150px;
+}
+
+/* Forms */
+.form-admin label {
+    font-weight: 500;
+}
+
+.form-admin .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Restaurant Photo Gallery */
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.photo-item {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #dc3545;
+}
+
+.photo-delete:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Business hours */
+.business-hours-container {
+    max-width: 600px;
+}
+
+.hour-row {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+    
+    .sidebar.toggled {
+        margin-left: 0;
+    }
+    
+    #page-content-wrapper.expanded {
+        margin-left: 0;
+    }
+} 

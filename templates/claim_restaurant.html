@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Restaurant - What2Eat @ UM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleUI.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .claim-form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .claim-form-container h2 {
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .claim-form-container p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            margin-top: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ff523b;
+            color: #fff;
+            padding: 10px 30px;
+            margin-top: 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.5s;
+            border: none;
+            width: 100%;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #563434;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('user_profile') }}">My Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if current_user.role == UserRole.ADMIN %}
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                    {% endif %}
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Claim Restaurant Form -->
+    <div class="container">
+        <div class="claim-form-container">
+            <h2>Claim "{{ restaurant.name }}"</h2>
+            <p>To claim this restaurant as the owner, please provide certification and proof of ownership. Our admin team will review your request and approve if valid.</p>
+            
+            <form action="{{ url_for('submit_restaurant_claim', restaurant_id=restaurant.restaurant_id) }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="certification">Certification Details</label>
+                    <textarea id="certification" name="certification" required placeholder="Please provide details of your certification, your position, and any other relevant information that establishes you as the owner or manager of this restaurant."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="proof_document">Upload Proof Document</label>
+                    <p>Please upload a document proving your ownership (business license, authorization letter, etc.)</p>
+                    <input type="file" id="proof_document" name="proof_document" class="file-upload" required>
+                    <p style="margin-top: 5px; font-size: 12px; color: #777;">Accepted formats: PDF, JPG, PNG (Max size: 5MB)</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_info">Contact Information</label>
+                    <input type="text" id="contact_info" name="contact_info" required placeholder="Your phone number or additional contact information">
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional_notes">Additional Notes (Optional)</label>
+                    <textarea id="additional_notes" name="additional_notes" placeholder="Any additional information you'd like to share with our review team"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Submit Claim Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-col-1">
+                <h3>What2Eat @UM</h3>
+                <p>Find the best dining options at the University of Macau!</p>
+                <img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}">
+            </div>
+            <div class="footer-col-2">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-3">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li>Email: what2eatatum@gmail.com</li>
+                    <li>Phone: +853 1234 5678</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">Copyright © 2023 - What2Eat @UM</p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        var MenuItems = document.getElementById("MenuItems");
+        
+        MenuItems.style.maxHeight = "0px";
+        
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+    </script>
+</body>
+</html> 

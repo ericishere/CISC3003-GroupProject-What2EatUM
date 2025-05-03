@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage {{ restaurant.name }} - What2Eat @ UM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleUI.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .manage-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .manage-container h2 {
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .business-hour-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .business-hour-group select {
+            width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .business-hour-group input[type="time"] {
+            padding: 7px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .business-hour-group button {
+            background: #ff523b;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .add-hour-btn {
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .photo-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .photo-item .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ff523b;
+            color: #fff;
+            padding: 10px 30px;
+            margin-top: 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.5s;
+            border: none;
+            width: 100%;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #563434;
+        }
+        
+        .btn-secondary {
+            background: #3e8bdb;
+        }
+        
+        .btn-secondary:hover {
+            background: #2969a9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}" width="125px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('user_profile') }}">My Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if current_user.role == UserRole.ADMIN %}
+                    <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                    {% endif %}
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Manage Restaurant Form -->
+    <div class="container">
+        <div class="manage-container">
+            <h2>Manage {{ restaurant.name }}</h2>
+            <form action="{{ url_for('manage_restaurant', restaurant_id=restaurant.restaurant_id) }}" method="post" enctype="multipart/form-data">
+                
+                <!-- Add Promotions Button -->
+                 <div class="form-group">
+                     <a href="{{ url_for('manage_promotions', restaurant_id=restaurant.restaurant_id) }}" class="btn btn-secondary" style="width: 100%; background-color: #4CAF50;">Manage Promotions</a>
+                 </div>
+                 
+                <div class="form-group">
+                    <label for="name">Restaurant Name</label>
+                    <input type="text" id="name" name="name" value="{{ restaurant.name }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" value="{{ restaurant.location }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" value="{{ restaurant.address }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cuisine_type">Cuisine Type</label>
+                    <select id="cuisine_type" name="cuisine_type" required>
+                        {% for cuisine in cuisine_types %}
+                        <option value="{{ cuisine.name }}" {% if restaurant.cuisine_type == cuisine %}selected{% endif %}>
+                            {{ cuisine.value.capitalize() }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description">{{ restaurant.description }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Business Hours</label>
+                    <div id="business-hours-container">
+                        {% if business_hours %}
+                            {% for hour in business_hours %}
+                            <div class="business-hour-group">
+                                <select name="day_of_week" required>
+                                    <option value="0" {% if hour.day_of_week == 0 %}selected{% endif %}>Monday</option>
+                                    <option value="1" {% if hour.day_of_week == 1 %}selected{% endif %}>Tuesday</option>
+                                    <option value="2" {% if hour.day_of_week == 2 %}selected{% endif %}>Wednesday</option>
+                                    <option value="3" {% if hour.day_of_week == 3 %}selected{% endif %}>Thursday</option>
+                                    <option value="4" {% if hour.day_of_week == 4 %}selected{% endif %}>Friday</option>
+                                    <option value="5" {% if hour.day_of_week == 5 %}selected{% endif %}>Saturday</option>
+                                    <option value="6" {% if hour.day_of_week == 6 %}selected{% endif %}>Sunday</option>
+                                </select>
+                                <input type="time" name="open_time" value="{{ hour.open_time.strftime('%H:%M') }}" required>
+                                <span>to</span>
+                                <input type="time" name="close_time" value="{{ hour.close_time.strftime('%H:%M') }}" required>
+                                <button type="button" class="remove-hour">✕</button>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="business-hour-group">
+                                <select name="day_of_week" required>
+                                    <option value="0">Monday</option>
+                                    <option value="1">Tuesday</option>
+                                    <option value="2">Wednesday</option>
+                                    <option value="3">Thursday</option>
+                                    <option value="4">Friday</option>
+                                    <option value="5">Saturday</option>
+                                    <option value="6">Sunday</option>
+                                </select>
+                                <input type="time" name="open_time" required>
+                                <span>to</span>
+                                <input type="time" name="close_time" required>
+                                <button type="button" class="remove-hour">✕</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="add-hour-btn" id="add-hour-btn">Add Hours</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Photos</label>
+                    <div class="photo-gallery">
+                        {% for photo in restaurant.photos %}
+                            <div class="photo-item" id="photo-item-{{ photo.photo_id }}">
+                                <img src="{{ url_for('static', filename='uploads/' + photo.file_path) }}">
+                                <button type="button" class="delete-btn" 
+                                        data-photo-id="{{ photo.photo_id }}" 
+                                        data-restaurant-id="{{ restaurant.restaurant_id }}" 
+                                        data-delete-url="{{ url_for('admin_delete_restaurant_photo', restaurant_id=restaurant.restaurant_id, photo_id=photo.photo_id) }}">
+                                    ✕
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photos">Add New Photos</label>
+                    <input type="file" id="photos" name="photos" multiple>
+                    <p style="margin-top: 5px; font-size: 12px; color: #777;">Accepted formats: JPG, JPEG, PNG, GIF (Max size: 5MB)</p>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.restaurant_id) }}" class="btn btn-secondary" style="width: 48%;">Cancel</a>
+                    <button type="submit" class="btn" style="width: 48%;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-col-1">
+                <h3>What2Eat @UM</h3>
+                <p>Find the best dining options at the University of Macau!</p>
+                <img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}">
+            </div>
+            <div class="footer-col-2">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-3">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li>Email: what2eatatum@gmail.com</li>
+                    <li>Phone: +853 1234 5678</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">Copyright © 2023 - What2Eat @UM</p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle menu
+        var MenuItems = document.getElementById("MenuItems");
+        
+        MenuItems.style.maxHeight = "0px";
+        
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+        
+        // Business hours functionality
+        document.getElementById('add-hour-btn').addEventListener('click', function() {
+            var container = document.getElementById('business-hours-container');
+            var newHourGroup = document.createElement('div');
+            newHourGroup.className = 'business-hour-group';
+            newHourGroup.innerHTML = `
+                <select name="day_of_week" required>
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+                <input type="time" name="open_time" required>
+                <span>to</span>
+                <input type="time" name="close_time" required>
+                <button type="button" class="remove-hour">✕</button>
+            `;
+            container.appendChild(newHourGroup);
+            
+            // Add event listener to the new remove button
+            newHourGroup.querySelector('.remove-hour').addEventListener('click', function() {
+                container.removeChild(newHourGroup);
+            });
+        });
+        
+        // Add event listeners to existing remove buttons
+        document.querySelectorAll('.remove-hour').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var hourGroup = this.parentNode;
+                hourGroup.parentNode.removeChild(hourGroup);
+            });
+        });
+        
+        // Async photo deletion
+        document.querySelectorAll('.delete-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (!confirm('Are you sure you want to delete this photo?')) {
+                    return;
+                }
+
+                const photoId = this.dataset.photoId;
+                const restaurantId = this.dataset.restaurantId;
+                const deleteUrl = this.dataset.deleteUrl;
+                const photoItem = document.getElementById('photo-item-' + photoId);
+
+                fetch(deleteUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' // Adjust if needed
+                    },
+                    // Add body if your backend expects it, e.g., body: JSON.stringify({})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Try to get error message from response
+                        return response.json().then(err => {
+                            throw new Error(err.message || 'Network response was not ok');
+                        });
+                    }                    
+                    return response.json(); // Expecting {success: true/false, message: '...'}
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Remove the photo item from the page
+                        if (photoItem) {
+                            photoItem.remove();
+                        }
+                        // Optionally show a success flash message dynamically
+                        console.log('Photo deleted successfully');
+                         // You might want to add a dynamic flash message here
+                    } else {
+                        alert('Failed to delete photo: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting photo:', error);
+                    alert('An error occurred while deleting the photo. Please try again. Error: ' + error.message);
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

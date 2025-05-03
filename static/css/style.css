@@ -1,0 +1,158 @@
+/* Global Styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+.footer {
+    margin-top: auto;
+    border-top: 1px solid #eee;
+}
+
+/* Authentication Pages */
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+/* Homepage */
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 0.3rem;
+    margin-bottom: 2rem;
+}
+
+/* Restaurant cards */
+.restaurant-card {
+    transition: transform 0.3s;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-5px);
+}
+
+.restaurant-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.promo-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* Review System */
+.review-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.review-rating {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.star-rating {
+    color: #ffc107;
+}
+
+.review-card {
+    border-left: 3px solid #007bff;
+    margin-bottom: 1.5rem;
+}
+
+.review-user {
+    font-weight: bold;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.review-reply {
+    padding-left: 2rem;
+    margin-top: 1rem;
+    border-left: 2px solid #eee;
+}
+
+/* Restaurant Detail Page */
+.restaurant-photos .carousel-item img {
+    height: 300px;
+    object-fit: cover;
+}
+
+.business-hours {
+    font-size: 0.9rem;
+}
+
+.business-hours .open {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.business-hours .closed {
+    color: #6c757d;
+}
+
+/* Review Images */
+.review-images img {
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+/* Rating Form */
+.rating-select {
+    display: inline-block;
+    border: none;
+    background: transparent;
+}
+
+.rating-stars {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.rating-stars i {
+    color: #ccc;
+    margin-right: 0.2rem;
+    transition: color 0.2s;
+}
+
+.rating-stars i.active {
+    color: #ffc107;
+}
+
+/* Animations */
+.card, .btn {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+} 

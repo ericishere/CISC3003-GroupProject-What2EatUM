@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What2Eat@UM-home page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleUI.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}" width="125px"></a>
+                </div>
+                <nav>
+                    <ul id="MenuItems">
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('restaurant_list') }}">Resterants</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('user_profile') }}">My Profile</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        {% if current_user.role == UserRole.ADMIN %}
+                        <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                        {% endif %}
+                        {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                <a href="javascript:void(0)" onclick="toggleNotifications()">
+                    <img src="{{ url_for('static', filename='images/notifications.png') }}" width="30px" height="30px">
+                </a>
+                <div id="notificationPopup" class="notification-popup">
+                    <p><strong>New Review:</strong> AZUCAR has received a 5-star review! 🌟</p>
+                    <hr>
+                    <p><strong>Promotion:</strong> Get 20% off at KITCHENext this week! 🥳</p>
+                    <hr>
+                    <p><strong>Reminder:</strong> Don't forget to check out the latest restaurants! 🍴</p>
+                </div>
+                <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <h1>What2Eat@UM <br> 澳大食咩嘢</h1>
+                    <p>Food review platform for University of Macau<br> 專為澳大學生而設的美食評價網站</p>
+                    <a href="{{ url_for('restaurant_list') }}"><button class="btn">Explore Now &#8594;</button></a>
+                </div>
+                <div class="col-2">
+                    <img src="{{ url_for('static', filename='images/image_1.jpg') }}">
+                </div>
+            </div>
+        </div>
+</div>
+   
+ <!--------------------- classical container ------------------>
+
+    <div class="small-container">
+        <h2 class="title">Classical Resterants</h2>
+        <div class="row">
+            {% for restaurant in restaurants[:4] %}
+            <div class="col-4">
+                <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.restaurant_id) }}">
+                    {% if restaurant.photos|length > 0 %}
+                    <img src="{{ url_for('static', filename='uploads/' + restaurant.photos[0].file_path) }}" alt="{{ restaurant.name }}">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/default-restaurant.png') }}" alt="{{ restaurant.name }}">
+                    {% endif %}
+                    <h4>{{ restaurant.name }}</h4>
+                </a>
+                <div class="rating">
+                    {% if restaurant.reviews|length > 0 %}
+                    {% set avg_rating = restaurant.reviews|map(attribute='rating')|sum / restaurant.reviews|length %}
+                    {% for i in range(5) %}
+                        {% if i < avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star"></i>
+                        {% elif i < avg_rating|round(0, 'ceil') and i >= avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star-half-o"></i>
+                        {% else %}
+                            <i class="fa fa-star-o"></i>
+                        {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    {% endif %}
+                </div>
+                <p>{{ restaurant.location }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    
+
+    <!------------------- Popular Resterants ----------------->
+        <h2 class="title">Popular Resterant</h2>
+        <div class="row">
+            {% for restaurant in restaurants[4:] %}
+            <div class="col-4">
+                <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.restaurant_id) }}">
+                    {% if restaurant.photos|length > 0 %}
+                    <img src="{{ url_for('static', filename='uploads/' + restaurant.photos[0].file_path) }}" alt="{{ restaurant.name }}">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/default-restaurant.png') }}" alt="{{ restaurant.name }}">
+                    {% endif %}
+                    <h4>{{ restaurant.name }}</h4>
+                </a>
+                <div class="rating">
+                    {% if restaurant.reviews|length > 0 %}
+                    {% set avg_rating = restaurant.reviews|map(attribute='rating')|sum / restaurant.reviews|length %}
+                    {% for i in range(5) %}
+                        {% if i < avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star"></i>
+                        {% elif i < avg_rating|round(0, 'ceil') and i >= avg_rating|round(0, 'floor') %}
+                            <i class="fa fa-star-half-o"></i>
+                        {% else %}
+                            <i class="fa fa-star-o"></i>
+                        {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    {% endif %}
+                </div>
+                <p>{{ restaurant.location }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!----------------------- offer ---------------------->
+    <div class="offer">
+        <div class="small-container">
+            <div class="row">
+                <div class="col-2">
+                    <img src="{{ url_for('static', filename='images/exclusive.jpg') }}" class="offer-img">
+                </div>
+                <div class="col-2">
+                    <p>Exclusively Available on What2Eat@UM</p>
+                    <h1>Welcome!</h1>
+                    <small>What2Eat@UM is for available now!
+                        And if you are a restaurant owner, please contact us to join our platform.
+                        <br>We are looking forward to your joining!<br>
+                    </small>
+                    <a href="" class="btn">Explore Now &#8594;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--------------------- testimonial ----------------->
+    <div class="testimonial">
+        <div class="small-container">
+            <div class="row">
+                <div class="col-3">
+                    <i class="fa fa-quote-left"></i>
+                    <p>The food is great and I come back here all the time for its delicious food.</p>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <img src="{{ url_for('static', filename='images/user.png') }}">
+                    <h3>Kelvin Wang</h3>
+                </div>
+                <div class="col-3">
+                    <i class="fa fa-quote-left"></i>
+                    <p>Amazing food! Whenever I think of a place to eat lunch, I pick this!</p>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-o"></i>
+                    </div>
+                    <img src="{{ url_for('static', filename='images/user2.png') }}">
+                    <h3>Alice Chan</h3>
+                </div>
+                <div class="col-3">
+                    <i class="fa fa-quote-left"></i>
+                    <p>I love this restaurant. The food is absolutely delicious and the service is exceptional.</p>
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <img src="{{ url_for('static', filename='images/user3.png') }}">
+                    <h3>Peter Lee</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!------------ footer ------------->
+
+    <div class="footer">
+        <div class="container">
+            <div class="footer-col-1">
+                <h3>What2Eat@UM</h3>
+                <p>Find the best dining options at the University of Macau</p>
+                <p>Discover restaurants, read reviews, and find the latest promotions all in one place.</p>
+                <img src="{{ url_for('static', filename='images/logo-removebg-preview.png') }}">
+            </div>
+            <div class="footer-col-2">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('restaurant_list') }}">Restaurants</a></li>
+                    <li><a href="{{ url_for('login') }}">Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-3">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Twitter</li>
+                    <li>Instagram</li>
+                    <li>YouTube</li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>About Us</h3>
+                <ul>
+                    <li>Our Story</li>
+                    <li>Contact Us</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">© 2025 What2Eat @ UM. All rights reserved.</p>
+    </div>
+
+    <!-- js for toggle menu -->
+    <script>
+        var MenuItems = document.getElementById("MenuItems");
+
+        MenuItems.style.maxHeight = "0px";
+
+        function menutoggle(){
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
+
+        function toggleNotifications() {
+            const popup = document.getElementById('notificationPopup');
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
